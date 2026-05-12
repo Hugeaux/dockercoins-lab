@@ -42,11 +42,13 @@ spec:
           valueFiles:
             - '../../{{path}}/values.yaml'
           values: |
+            nameOverride: {{name}}
             service:
               port: {{port}}
             # FIX: Nest the repository under 'image' to satisfy the chart
             image:
               repository: {{imageName}}
+              tag: {{tag | default "latest"}}
       destination:
         server: https://kubernetes.default.svc
         namespace: 'dockercoins-{{path.basename}}'
