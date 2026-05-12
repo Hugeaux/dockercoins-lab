@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dockercoins-lab
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          # Discovery: Find directories (dev, prod)
+          - git:
+              repoURL: https://github.com/hugeaux/dockercoins-gitops.git
+              revision: HEAD
+              directories:
+                - path: deployments/*
+          # Component List: The 5 DockerCoins services
+          - list:
+              elements:
+                - name: webui
+                  port: 80
+                - name: worker
+                  port: 80
+                - name: hasher
+                  port: 80
+                - name: rng
+                  port: 80
+                - name: redis
+                  port: 6379
+                  customImage: redis
+  template:
+    metadata:
+      name: '{{path.basename}}-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/hugeaux/dockercoins-gitops.git
+        targetRevision: HEAD
+        path: charts/generic-service
+        helm:
+          # Load the values.yaml from the discovered directory
+          valueFiles:
+            - '../../{{path}}/values.yaml'
+          values: |
+            # Mapping our list to the generic-service chart values
+            service:
+              port: {{port}}
+            image: {{customImage | default (printf "jpetazzo/dockercoins-%s" name)}}
+      destination:
+        server: https://kubernetes.default.svc
+        # Namespace per instance (Step 2)
+        namespace: 'dockercoins-{{path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

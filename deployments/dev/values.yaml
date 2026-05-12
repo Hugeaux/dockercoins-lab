@@ -1,0 +1,4 @@
+# Dev values
+replicaCount: 1
+# generic-service chart uses 'image' and 'tag'
+tag: latest
