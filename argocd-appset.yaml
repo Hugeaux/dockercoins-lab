@@ -16,19 +16,19 @@ spec:
               elements:
                 - name: webui
                   port: "80"
-                  image: jpetazzo/dockercoins-webui
+                  imageName: jpetazzo/dockercoins-webui
                 - name: worker
                   port: "80"
-                  image: jpetazzo/dockercoins-worker
+                  imageName: jpetazzo/dockercoins-worker
                 - name: hasher
                   port: "80"
-                  image: jpetazzo/dockercoins-hasher
+                  imageName: jpetazzo/dockercoins-hasher
                 - name: rng
                   port: "80"
-                  image: jpetazzo/dockercoins-rng
+                  imageName: jpetazzo/dockercoins-rng
                 - name: redis
                   port: "6379"
-                  image: redis
+                  imageName: redis
   template:
     metadata:
       name: '{{path.basename}}-{{name}}'
@@ -44,7 +44,9 @@ spec:
           values: |
             service:
               port: {{port}}
-            image: {{image}}
+            # FIX: Nest the repository under 'image' to satisfy the chart
+            image:
+              repository: {{imageName}}
       destination:
         server: https://kubernetes.default.svc
         namespace: 'dockercoins-{{path.basename}}'
