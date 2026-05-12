@@ -7,26 +7,28 @@ spec:
   generators:
     - matrix:
         generators:
-          # Discovery: Find directories (dev, prod)
           - git:
               repoURL: https://github.com/hugeaux/dockercoins-lab.git
               revision: HEAD
               directories:
                 - path: deployments/*
-          # Component List: The 5 DockerCoins services
           - list:
               elements:
                 - name: webui
-                  port: 80
+                  port: "80"
+                  image: jpetazzo/dockercoins-webui
                 - name: worker
-                  port: 80
+                  port: "80"
+                  image: jpetazzo/dockercoins-worker
                 - name: hasher
-                  port: 80
+                  port: "80"
+                  image: jpetazzo/dockercoins-hasher
                 - name: rng
-                  port: 80
+                  port: "80"
+                  image: jpetazzo/dockercoins-rng
                 - name: redis
-                  port: 6379
-                  customImage: redis
+                  port: "6379"
+                  image: redis
   template:
     metadata:
       name: '{{path.basename}}-{{name}}'
@@ -37,17 +39,14 @@ spec:
         targetRevision: HEAD
         path: charts/generic-service
         helm:
-          # Load the values.yaml from the discovered directory
           valueFiles:
             - '../../{{path}}/values.yaml'
           values: |
-            # Mapping our list to the generic-service chart values
             service:
               port: {{port}}
-            image: {{customImage | default (printf "jpetazzo/dockercoins-%s" name)}}
+            image: {{image}}
       destination:
         server: https://kubernetes.default.svc
-        # Namespace per instance (Step 2)
         namespace: 'dockercoins-{{path.basename}}'
       syncPolicy:
         automated:
