@@ -16,16 +16,16 @@ spec:
               elements:
                 - name: webui
                   port: "80"
-                  imageName: jpetazzo/dockercoins-webui
+                  imageName: dockercoins/webui
                 - name: worker
                   port: "80"
-                  imageName: jpetazzo/dockercoins-worker
+                  imageName: dockercoins/worker
                 - name: hasher
                   port: "80"
-                  imageName: jpetazzo/dockercoins-hasher
+                  imageName: dockercoins/hasher
                 - name: rng
                   port: "80"
-                  imageName: jpetazzo/dockercoins-rng
+                  imageName: dockercoins/rng
                 - name: redis
                   port: "6379"
                   imageName: redis
