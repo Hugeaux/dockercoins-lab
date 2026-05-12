@@ -9,7 +9,7 @@ spec:
         generators:
           # Discovery: Find directories (dev, prod)
           - git:
-              repoURL: https://github.com/hugeaux/dockercoins-gitops.git
+              repoURL: https://github.com/hugeaux/dockercoins-lab.git
               revision: HEAD
               directories:
                 - path: deployments/*
@@ -33,7 +33,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/hugeaux/dockercoins-gitops.git
+        repoURL: https://github.com/hugeaux/dockercoins-lab.git
         targetRevision: HEAD
         path: charts/generic-service
         helm:
