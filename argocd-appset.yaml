@@ -9,7 +9,7 @@ spec:
         generators:
           - git:
               repoURL: https://github.com/Hugeaux/dockercoins-lab.git
-              revision: HEAD
+              revision: main
               directories:
                 - path: deployments/*
           - list:
@@ -36,7 +36,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/Hugeaux/dockercoins-lab.git
-        targetRevision: HEAD
+        targetRevision: main
         path: charts/generic-service
         helm:
           valueFiles:
